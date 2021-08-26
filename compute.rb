@@ -3,7 +3,6 @@ require 'colorize'
 
 class Computate
 
-  #Highest temperature for the year
   def highest_temp(data)
     max_temp = -9999
     date = ''
@@ -18,7 +17,6 @@ class Computate
     [max_temp, date]
   end
 
-  #Lowest temperature for the year
   def lowest_temp(data)
     min_temp = 9999
     date = ''
@@ -33,7 +31,6 @@ class Computate
     [min_temp, date]
   end
 
-  #Highest Humidity for the year
   def highest_humidity(data)
     max_humid = -9999
     date = ''
@@ -48,7 +45,6 @@ class Computate
     [max_humid, date]
   end
 
-  #Highest average temp for a month
   def highest_average_temp(data)
     avg = 0
     data.each do |row|
@@ -57,7 +53,6 @@ class Computate
     avg / data.length
   end
 
-  #Lowest average temp for a month
   def lowest_average_temp(data)
     avg = 0
     data.each do |row|
@@ -66,7 +61,6 @@ class Computate
     avg / data.length
   end
 
-  #Average Humidity for a month
   def average_humidity(data)
     avg = 0
     data.each do |row|
@@ -75,7 +69,6 @@ class Computate
     avg / data.length
   end
 
-  #Per day temp with horizontal bar charts in red and blue
   def per_day_temp(data)
     red_line = []
     blue_line = []
@@ -96,7 +89,6 @@ class Computate
     [red_line, blue_line]
   end
 
-  #Bonus Task
   def single_horizontal_line(data)
     blue_red_line = []
     data.each do |row|
@@ -114,14 +106,12 @@ class Computate
     blue_red_line
   end
 
-  #Return file name according to date
   def get_file_name(date)
     year, month = date.split '/'
     month = Date::ABBR_MONTHNAMES[month.to_i]
     file_name = "*_#{year}_#{month}.txt"
   end
 
-  #Returns month and year
   def get_date(data)
     year, month, day = data[0].date.split('-')
     "#{Date::MONTHNAMES[month.to_i]} #{year}"
