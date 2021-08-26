@@ -1,0 +1,3 @@
+name, age, gender
+Bill, 24, male
+Ana, 20, female

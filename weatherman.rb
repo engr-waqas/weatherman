@@ -1,69 +1,72 @@
 require_relative 'read_file'
 require_relative 'compute'
 require_relative 'print'
+require_relative 'weather'
 require 'date'
 
-MAX_TEMP_INDEX = 1
-MIN_TEMP_INDEX = 3
-MAX_HUMIDITY_INDEX = 7
-AVG_HUMIDITY_INDEX = 8
+class WeatherMan
 
-begin
-  input_array = ARGV
-  return if input_array.empty? || input_array.length != 3
+  def initialize
+    @display = Display.new
+    @compute = Computate.new
+    @read = Read.new
+    @file_name = ''
+  end
 
-  file_name = ''
-
-  compute = Computate.new
-  read = Read.new
-  display = Display.new
-  puts
-
-  if input_array[0] == '-e'
-    file_name = "*_#{input_array[1]}_*"
-    path = input_array[2]
-
-    result = read.read_file(path, file_name)
-
-    if !result.empty?
-      highest_temp = compute.highest(result, MAX_TEMP_INDEX)
-      lowest_temp = compute.lowest(result, MIN_TEMP_INDEX)
-      highest_humidity = compute.highest(result, MAX_HUMIDITY_INDEX)
-
-      #Print yearly data
-      display.print_yearly(highest_temp, lowest_temp, highest_humidity)
+  def input(input_array)
+    if !input_array.empty? || input_array.length != 3
+      type, date, path = input_array
+      yearly_weather(date, path) if type == '-e'
+      monthly_weather(date, path) if type == '-a'
+      bar_chart(date, path) if type == '-c'
     end
   end
 
-  if input_array[0] == '-a' || input_array[0] == '-c'
-    year_month = input_array[1].split '/'
-    month = Date::ABBR_MONTHNAMES[year_month[1].to_i]
-    year = year_month[0]
-    file_name = "*_#{year}_#{month}.txt"
+  def yearly_weather(year, path)
+    file_name = "*_#{year}_*"
+    result = @read.read_file(path, file_name)
 
-    result = read.read_file(input_array[2], file_name)
+    if !result.empty?
+      max_temp, date = @compute.highest_temp(result)
+      @display.print_max_temp(max_temp, date)
 
-    if !result.empty? && input_array[0] == '-a'
-      highest_avg_temp = compute.average(result, MAX_TEMP_INDEX)
-      lowest_avg_temp = compute.average(result, MIN_TEMP_INDEX)
-      avg_humid = compute.average(result, AVG_HUMIDITY_INDEX)
+      min_temp, date = @compute.lowest_temp(result)
+      @display.print_min_temp(min_temp, date)
 
-      #Print monthly data
-      display.print_monthly(highest_avg_temp, lowest_avg_temp, avg_humid)
+      max_humid, date = @compute.highest_humidity(result)
+      @display.print_max_humid(max_humid, date)
     end
+  end
 
-    if !result.empty? && (input_array[0] == '-c')
-      puts "#{Date::MONTHNAMES[year_month[1].to_i]} #{year}"
-      compute.per_day_temp(result)
+  def monthly_weather(date, path)
+    file_name = @compute.get_file_name(date)
+    result = @read.read_file(path, file_name)
 
-      puts "\n\n\n"
-      puts "______Bonus Task______"
-      puts "\n\n"
+    if !result.empty?
+      max_avg_temp = @compute.highest_average_temp(result)
+      @display.print_max_avg_temp(max_avg_temp)
 
-      puts "#{Date::MONTHNAMES[year_month[1].to_i]} #{year}"
-      compute.single_horizontal_line_bonus_task(result)
+      min_avg_temp = @compute.lowest_average_temp(result)
+      @display.print_min_avg_temp(min_avg_temp)
+
+      avg_humid = @compute.average_humidity(result)
+      @display.print_avg_humidity(avg_humid)
+    end
+  end
+
+  def bar_chart(date, path)
+    file_name = @compute.get_file_name(date)
+    result = @read.read_file(path, file_name)
+    if !result.empty?
+      # puts "#{Date::MONTHNAMES[month.to_i]} #{year}"
+      red_line, blue_line = @compute.per_day_temp(result)
+      @display.print_per_day_temp(result, red_line, blue_line)
+      # puts "#{Date::MONTHNAMES[month.to_i]} #{year}"
+      blue_red_line = @compute.single_horizontal_line(result)
+      @display.print_single_horizontal_line(result, blue_red_line)
     end
   end
 end
 
-
+weatherman = WeatherMan.new
+weatherman.input(ARGV)

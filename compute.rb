@@ -1,94 +1,125 @@
+require 'date'
+require 'colorize'
+
 class Computate
-  require 'date'
-  require 'colorize'
 
-  #for both temperature and humidity
-  def highest(data, index)
-    highest_temp = -500
-    highest_date = ''
-    data.each do |day_wise|
-      signle_day = day_wise.join.split(',')
-      if signle_day[index].to_i > highest_temp.to_i && signle_day[index] != 'Max TemperatureC' && signle_day[index] != ''
-        highest_temp = signle_day[index]
-        highest_date = signle_day[0]
+  #Highest temperature for the year
+  def highest_temp(data)
+    max_temp = -9999
+    date = ''
+    data.each do |row|
+      if row.max_temp > max_temp
+        max_temp = row.max_temp
+        date = row.date
       end
     end
-    date = highest_date.split '-'
-    month_day = "#{Date::MONTHNAMES[date[1].to_i]} #{date[2]}"
-    [highest_temp, month_day]
+    date = date.split '-'
+    date = "#{Date::MONTHNAMES[date[1].to_i]} #{date[2]}"
+    [max_temp, date]
   end
 
-  #for temp only
-  def lowest(data, index)
-    lowest_temp = 500
-    lowest_date = ''
-    data.each do |day_wise|
-      signle_day = day_wise.join.split(',')
-      if signle_day[index].to_i < lowest_temp.to_i && signle_day[index] != 'Min TemperatureC' && signle_day[index] != ''
-        lowest_temp = signle_day[index]
-        lowest_date = signle_day[0]
+  #Lowest temperature for the year
+  def lowest_temp(data)
+    min_temp = 9999
+    date = ''
+    data.each do |row|
+      if row.min_temp < min_temp
+        min_temp = row.min_temp
+        date = row.date
       end
     end
-    date = lowest_date.split '-'
-    month_day = "#{Date::MONTHNAMES[date[1].to_i]} #{date[2]}"
-    [lowest_temp, month_day]
+    date = date.split '-'
+    date = "#{Date::MONTHNAMES[date[1].to_i]} #{date[2]}"
+    [min_temp, date]
   end
 
-  #for both temp and humidity
-  def average(data, index)
+  #Highest Humidity for the year
+  def highest_humidity(data)
+    max_humid = -9999
+    date = ''
+    data.each do |row|
+      if row.max_humid > max_humid
+        max_humid = row.max_humid
+        date = row.date
+      end
+    end
+    date = date.split '-'
+    date = "#{Date::MONTHNAMES[date[1].to_i]} #{date[2]}"
+    [max_humid, date]
+  end
+
+  #Highest average temp for a month
+  def highest_average_temp(data)
     avg = 0
-    data.each do |day_wise|
-      signle_day = day_wise.join.split(',')
-      avg += signle_day[index].to_i
+    data.each do |row|
+      avg += row.max_temp
     end
     avg / data.length
   end
 
-  #Per day temp
+  #Lowest average temp for a month
+  def lowest_average_temp(data)
+    avg = 0
+    data.each do |row|
+      avg += row.min_temp
+    end
+    avg / data.length
+  end
+
+  #Average Humidity for a month
+  def average_humidity(data)
+    avg = 0
+    data.each do |row|
+      avg += row.avg_humid
+    end
+    avg / data.length
+  end
+
+  #Per day temp with horizontal bar charts in red and blue
   def per_day_temp(data)
-    #Removing Headings
-    data.shift(1)
-
-    data.each do |day_wise|
-      signle_day = day_wise.join.split(',')
+    red_line = []
+    blue_line = []
+    data.each do |row|
       max_temp = ''
-      low_temp = ''
+      min_temp = ''
 
-      signle_day[1].to_i.times do
+      row.max_temp.times do
         max_temp += '+'.colorize(:red)
       end
+      red_line << max_temp
 
-      signle_day[3].to_i.times do
-        low_temp += '+'.colorize(:blue)
+      row.min_temp.times do
+        min_temp += '+'.colorize(:blue)
       end
-
-      if signle_day[1] != ''
-        puts "#{format('%02d', (signle_day[0].split '-')[2].to_i)} #{max_temp} #{signle_day[1]}C"
-      end
-
-      if signle_day[3] != ''
-        puts "#{format('%02d', (signle_day[0].split '-')[2].to_i)} #{low_temp} #{signle_day[3]}C"
-      end
+      blue_line << min_temp
     end
+    [red_line, blue_line]
   end
 
   #Bonus Task
-  def single_horizontal_line_bonus_task(data)
-    data.each do |day_wise|
-      signle_day = day_wise.join.split(',')
+  def single_horizontal_line(data)
+    blue_red_line = []
+    data.each do |row|
       min_max_temp = ''
 
-      signle_day[3].to_i.times do
+      row.min_temp.times do
         min_max_temp += '+'.colorize(:blue)
       end
 
-      signle_day[1].to_i.times do
+      row.max_temp.times do
         min_max_temp += '+'.colorize(:red)
       end
+      blue_red_line << min_max_temp
 
-      if signle_day[1] != '' && signle_day[3] != ''
-        puts "#{format('%02d', (signle_day[0].split '-')[2].to_i)} #{min_max_temp} #{signle_day[3]}C-#{signle_day[1]}C"
-      end
+      # puts "#{format('%02d', (row.date.split '-')[2].to_i)} #{min_max_temp} #{row.min_temp}C-#{row.max_temp}C"
     end
+    blue_red_line
+  end
+
+  #get file name by date
+  def get_file_name(date)
+    year, month = date.split '/'
+    month = Date::ABBR_MONTHNAMES[month.to_i]
+    file_name = "*_#{year}_#{month}.txt"
   end
 end
