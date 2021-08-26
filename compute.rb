@@ -110,16 +110,20 @@ class Computate
         min_max_temp += '+'.colorize(:red)
       end
       blue_red_line << min_max_temp
-
-      # puts "#{format('%02d', (row.date.split '-')[2].to_i)} #{min_max_temp} #{row.min_temp}C-#{row.max_temp}C"
     end
     blue_red_line
   end
 
-  #get file name by date
+  #Return file name according to date
   def get_file_name(date)
     year, month = date.split '/'
     month = Date::ABBR_MONTHNAMES[month.to_i]
     file_name = "*_#{year}_#{month}.txt"
+  end
+
+  #Returns month and year
+  def get_date(data)
+    year, month, day = data[0].date.split('-')
+    "#{Date::MONTHNAMES[month.to_i]} #{year}"
   end
 end

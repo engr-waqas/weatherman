@@ -1,6 +1,6 @@
 require_relative 'read_file'
 require_relative 'compute'
-require_relative 'print'
+require_relative 'display_weather'
 require_relative 'weather'
 require 'date'
 
@@ -57,11 +57,11 @@ class WeatherMan
   def bar_chart(date, path)
     file_name = @compute.get_file_name(date)
     result = @read.read_file(path, file_name)
+
     if !result.empty?
-      # puts "#{Date::MONTHNAMES[month.to_i]} #{year}"
       red_line, blue_line = @compute.per_day_temp(result)
       @display.print_per_day_temp(result, red_line, blue_line)
-      # puts "#{Date::MONTHNAMES[month.to_i]} #{year}"
+
       blue_red_line = @compute.single_horizontal_line(result)
       @display.print_single_horizontal_line(result, blue_red_line)
     end

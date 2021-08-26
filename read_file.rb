@@ -1,9 +1,11 @@
 require_relative 'weather'
+
+DATE_INDEX = 0
 MAX_TEMP_INDEX = 1
 MIN_TEMP_INDEX = 3
 MAX_HUMID_INDEX = 7
 AVG_HUMID_INDEX = 8
-DATE_INDEX = 0
+
 class Read
 
   def initialize
