@@ -9,11 +9,11 @@ class WeatherMan
   def initialize
     @display = Display.new
     @compute = Computate.new
-    @read = Read.new
+    @read = Reader.new
     @file_name = ''
   end
 
-  def input(input_array)
+  def read_agruments(input_array)
     if !input_array.empty? || input_array.length != 3
       type, date, path = input_array
       yearly_weather(date, path) if type == '-e'
@@ -60,13 +60,36 @@ class WeatherMan
 
     if !result.empty?
       red_line, blue_line = @compute.per_day_temp(result)
-      @display.print_per_day_temp(result, red_line, blue_line)
+      self.horizontal_bar(result, red_line, blue_line)
 
       blue_red_line = @compute.single_horizontal_line(result)
-      @display.print_single_horizontal_line(result, blue_red_line)
+      self.combine_horizontal_bar(result, blue_red_line)
+    end
+  end
+
+  def horizontal_bar(data, red_line, blue_line)
+    date = @compute.get_date(data)
+    @display.print_date(date)
+    data.length.times do |row|
+      red_bar = red_line[row]
+      blue_bar = blue_line[row]
+      day, max_temp, min_temp = @compute.bar_result(data[row])
+      @display.print_red_bar(day, red_bar, max_temp)
+      @display.print_blue_bar(day, blue_bar, min_temp)
+    end
+  end
+
+  def combine_horizontal_bar(data, blue_red_line)
+    @display.print_bonus()
+    date = @compute.get_date(data)
+    @display.print_date(date)
+    data.length.times do |row|
+      bar = blue_red_line[row]
+      day, max_temp, min_temp = @compute.bar_result(data[row])
+      @display.print_blue_red_bar(day, bar, min_temp, max_temp)
     end
   end
 end
 
 weatherman = WeatherMan.new
-weatherman.input(ARGV)
+weatherman.read_agruments(ARGV)

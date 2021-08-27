@@ -116,4 +116,11 @@ class Computate
     year, month, day = data[0].date.split('-')
     "#{Date::MONTHNAMES[month.to_i]} #{year}"
   end
+
+  def bar_result(result)
+    day = result.date.split('-')[2].to_i
+    max_temp = result.max_temp
+    min_temp = result.min_temp
+    [day, max_temp, min_temp]
+  end
 end

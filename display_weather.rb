@@ -5,6 +5,7 @@ class Display
   def initialize
     @compute = Computate.new
   end
+
   def print_max_temp(max_temp, date)
     puts "\nHighest: #{max_temp}C on #{date}"
   end
@@ -29,23 +30,24 @@ class Display
     puts "Average Humidity: #{avg_humid}%"
   end
 
-  def print_per_day_temp(data, red_line, blue_line)
-    puts "\n#{@compute.get_date(data)}"
-    data.length.times do |row|
-      puts "#{format('%02d', (data[row].date.split '-')[2].to_i)} " \
-        "#{red_line[row]} #{data[row].max_temp}C"
-      puts "#{format('%02d', (data[row].date.split '-')[2].to_i)} "  \
-        "#{blue_line[row]} #{data[row].min_temp}C"
-    end
+  def print_red_bar(day, red_bar, max_temp)
+    puts "#{format('%02d', day)} #{red_bar} #{max_temp}C"
   end
 
-  def print_single_horizontal_line(data, blue_red_line)
-    puts "\n\n\n______Bonus Task______\n\n"
-    puts "\n#{@compute.get_date(data)}"
-    data.length.times do |row|
-      puts "#{format('%02d', (data[row].date.split '-')[2].to_i)} " \
-        "#{blue_red_line[row]} #{data[row].min_temp}C-#{data[row].max_temp}C"
-    end
+  def print_blue_bar(day, blue_bar, min_temp)
+    puts "#{format('%02d', day)} #{blue_bar} #{min_temp}C"
+  end
+
+  def print_blue_red_bar(day, bar, min_temp, max_temp)
+    puts "#{format('%02d', day)} #{bar} #{min_temp}C-#{max_temp}C"
+  end
+
+  def print_date(date)
+    puts "\n" << date
+  end
+
+  def print_bonus()
+    puts "\n\n\n______Bonus Task______\n\n\n"
   end
 
 end
