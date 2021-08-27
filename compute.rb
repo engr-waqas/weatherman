@@ -73,35 +73,20 @@ class Computate
     red_line = []
     blue_line = []
     data.each do |row|
-      max_temp = ''
-      min_temp = ''
-
-      row.max_temp.times do
-        max_temp += '+'.colorize(:red)
-      end
-      red_line << max_temp
-
-      row.min_temp.times do
-        min_temp += '+'.colorize(:blue)
-      end
-      blue_line << min_temp
+      red_line << Array.new(row.max_temp) {'+'.colorize(:red)}.join
+      blue_line << Array.new(row.min_temp) {'+'.colorize(:blue)}.join
     end
     [red_line, blue_line]
   end
 
   def single_horizontal_line(data)
     blue_red_line = []
+    red_line = ''
+    blue_line = ''
     data.each do |row|
-      min_max_temp = ''
-
-      row.min_temp.times do
-        min_max_temp += '+'.colorize(:blue)
-      end
-
-      row.max_temp.times do
-        min_max_temp += '+'.colorize(:red)
-      end
-      blue_red_line << min_max_temp
+      red_line = Array.new(row.max_temp) {'+'.colorize(:red)}.join
+      blue_line = Array.new(row.min_temp) {'+'.colorize(:blue)}.join
+      blue_red_line << (red_line << blue_line)
     end
     blue_red_line
   end
@@ -117,7 +102,7 @@ class Computate
     "#{Date::MONTHNAMES[month.to_i]} #{year}"
   end
 
-  def bar_result(result)
+  def refine_temp_date(result)
     day = result.date.split('-')[2].to_i
     max_temp = result.max_temp
     min_temp = result.min_temp
