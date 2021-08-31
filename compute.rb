@@ -1,7 +1,7 @@
 require 'date'
 require 'colorize'
 
-class Computate
+module Computate
   def highest_temp(data)
     max_record = data.max_by(&:max_temp)
     max_temp = max_record.max_temp
