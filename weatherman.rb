@@ -5,7 +5,6 @@ require_relative 'weather'
 require 'date'
 
 class WeatherMan
-
   def initialize
     @display = Display.new
     @compute = Computate.new
@@ -25,7 +24,7 @@ class WeatherMan
   def yearly_weather(year, path)
     file_name = "*_#{year}_*"
     result = @read.read_file(path, file_name)
-    if !result.empty?
+    unless result.empty?
       max_temp, max_date = @compute.highest_temp(result)
       min_temp, min_date = @compute.lowest_temp(result)
       max_humid, humid_date = @compute.highest_humidity(result)
@@ -36,10 +35,8 @@ class WeatherMan
   def monthly_weather(date, path)
     file_name = @compute.get_file_name(date)
     result = @read.read_file(path, file_name)
-    if !result.empty?
-      max_avg_temp = @compute.highest_average_temp(result)
-      min_avg_temp = @compute.lowest_average_temp(result)
-      avg_humid = @compute.average_humidity(result)
+    unless result.empty?
+      max_avg_temp, min_avg_temp, avg_humid = @compute.compute_averages(result)
       @display.print_monthly_weather(max_avg_temp, min_avg_temp, avg_humid)
     end
   end
@@ -48,7 +45,7 @@ class WeatherMan
     file_name = @compute.get_file_name(date)
     result = @read.read_file(path, file_name)
 
-    if !result.empty?
+    unless result.empty?
       red_line, blue_line = @compute.per_day_temp(result)
       @display.print_per_day_temp(result, red_line, blue_line)
 

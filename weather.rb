@@ -1,5 +1,5 @@
 class Weather
-  attr_accessor :max_temp, :min_temp, :max_humid,  :avg_humid, :date
+  attr_accessor :max_temp, :min_temp, :max_humid, :avg_humid, :date
 
   def initialize(date, max_temp, min_temp, max_humid, avg_humid)
     @date = date

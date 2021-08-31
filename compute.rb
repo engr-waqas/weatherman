@@ -2,79 +2,43 @@ require 'date'
 require 'colorize'
 
 class Computate
-
   def highest_temp(data)
-    max_temp = -9999
-    date = ''
-    data.each do |row|
-      if row.max_temp > max_temp
-        max_temp = row.max_temp
-        date = row.date
-      end
-    end
-    date = date.split '-'
+    max_record = data.max_by(&:max_temp)
+    max_temp = max_record.max_temp
+    date = max_record.date.split '-'
     date = "#{Date::MONTHNAMES[date[1].to_i]} #{date[2]}"
     [max_temp, date]
   end
 
   def lowest_temp(data)
-    min_temp = 9999
-    date = ''
-    data.each do |row|
-      if row.min_temp < min_temp
-        min_temp = row.min_temp
-        date = row.date
-      end
-    end
-    date = date.split '-'
+    min_record = data.min_by(&:min_temp)
+    min_temp = min_record.min_temp
+    date = min_record.date.split '-'
     date = "#{Date::MONTHNAMES[date[1].to_i]} #{date[2]}"
     [min_temp, date]
   end
 
   def highest_humidity(data)
-    max_humid = -9999
-    date = ''
-    data.each do |row|
-      if row.max_humid > max_humid
-        max_humid = row.max_humid
-        date = row.date
-      end
-    end
-    date = date.split '-'
+    max_record = data.max_by(&:max_humid)
+    max_humid = max_record.max_humid
+    date = max_record.date.split '-'
     date = "#{Date::MONTHNAMES[date[1].to_i]} #{date[2]}"
     [max_humid, date]
   end
 
-  def highest_average_temp(data)
-    avg = 0
-    data.each do |row|
-      avg += row.max_temp
-    end
-    avg / data.length
-  end
-
-  def lowest_average_temp(data)
-    avg = 0
-    data.each do |row|
-      avg += row.min_temp
-    end
-    avg / data.length
-  end
-
-  def average_humidity(data)
-    avg = 0
-    data.each do |row|
-      avg += row.avg_humid
-    end
-    avg / data.length
+  def compute_averages(data)
+    max_avg_tem = data.map(&:max_temp).sum / data.count
+    min_avg_tem = data.map(&:min_temp).sum / data.count
+    avg_humid = data.map(&:avg_humid).sum / data.count
+    [max_avg_tem, min_avg_tem, avg_humid]
   end
 
   def per_day_temp(data)
     red_line = []
     blue_line = []
     data.each do |row|
-      red_line << Array.new(row.max_temp) {'+'.colorize(:red)}.join
-      blue_line << Array.new(row.min_temp) {'+'.colorize(:blue)}.join
+      red_line << Array.new(row.max_temp) { '+'.colorize(:red) }.join
+      blue_line << Array.new(row.min_temp) { '+'.colorize(:blue) }.join
     end
     [red_line, blue_line]
   end
@@ -84,9 +48,9 @@ class Computate
     red_line = ''
     blue_line = ''
     data.each do |row|
-      red_line = Array.new(row.max_temp) {'+'.colorize(:red)}.join
-      blue_line = Array.new(row.min_temp) {'+'.colorize(:blue)}.join
-      blue_red_line << (red_line << blue_line)
+      red_line = Array.new(row.max_temp) { '+'.colorize(:red) }.join
+      blue_line = Array.new(row.min_temp) { '+'.colorize(:blue) }.join
+      blue_red_line << (blue_line << red_line)
     end
     blue_red_line
   end
