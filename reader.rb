@@ -6,8 +6,6 @@ class Reader
     @data = []
   end
 
-
-
   def read_file(path, files)
     begin
       Dir.chdir(path) do
@@ -31,12 +29,12 @@ class Reader
   def read_row(row)
     if !row['Max TemperatureC'].nil? && !row['Min TemperatureC'].nil? &&
        !row['Max Humidity'].nil? && !row[' Mean Humidity'].nil?
-      date = row['PKT' || 'GST']
-      max_temp = row['Max TemperatureC']
-      min_temp = row['Min TemperatureC']
-      max_humid = row['Max Humidity']
-      avg_humid = row[' Mean Humidity']
-      @data << Weather.new(date, max_temp, min_temp, max_humid, avg_humid)
+      @data << Weather.new(
+        date: row['PKT' || 'GST'],
+        max_temp: row['Max TemperatureC'],
+        min_temp: row['Min TemperatureC'],
+        max_humid: row['Max Humidity'],
+        avg_humid: row[' Mean Humidity'])
     end
   end
 end

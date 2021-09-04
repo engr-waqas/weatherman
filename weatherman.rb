@@ -16,9 +16,9 @@ class WeatherMan
   def read_agruments(input_array)
     if !input_array.empty? || !input_array.length.equal?(3)
       type, date, path = input_array
-      self.yearly_weather(date, path) if type.eql?('-e')
-      self.monthly_weather(date, path) if type.eql?('-a')
-      self.horizontal_bar_chart(date, path) if type.eql?('-c')
+      yearly_weather(date, path) if type.eql?('-e')
+      monthly_weather(date, path) if type.eql?('-a')
+      horizontal_bar_chart(date, path) if type.eql?('-c')
     end
   end
 
@@ -48,10 +48,10 @@ class WeatherMan
 
     unless result.empty?
       red_line, blue_line = per_day_temp(result)
-      print_per_day_temp(result, red_line, blue_line)
+      print_per_day_temp(result, date, red_line, blue_line)
 
       blue_red_line = single_horizontal_line(result)
-      print_single_horizontal_line(result, blue_red_line)
+      print_single_horizontal_line(result, date, blue_red_line)
     end
   end
 end

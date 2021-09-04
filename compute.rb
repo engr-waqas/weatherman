@@ -5,24 +5,24 @@ module Computate
   def highest_temp(data)
     max_record = data.max_by(&:max_temp)
     max_temp = max_record.max_temp
-    date = max_record.date.split '-'
-    date = "#{Date::MONTHNAMES[date[1].to_i]} #{date[2]}"
+    day, month, year = max_record.date.split '-'
+    date = "#{Date::MONTHNAMES[month.to_i]} #{year}"
     [max_temp, date]
   end
 
   def lowest_temp(data)
     min_record = data.min_by(&:min_temp)
     min_temp = min_record.min_temp
-    date = min_record.date.split '-'
-    date = "#{Date::MONTHNAMES[date[1].to_i]} #{date[2]}"
+    day, month, year = min_record.date.split '-'
+    date = "#{Date::MONTHNAMES[month.to_i]} #{year}"
     [min_temp, date]
   end
 
   def highest_humidity(data)
     max_record = data.max_by(&:max_humid)
     max_humid = max_record.max_humid
-    date = max_record.date.split '-'
-    date = "#{Date::MONTHNAMES[date[1].to_i]} #{date[2]}"
+    day, month, year = max_record.date.split '-'
+    date = "#{Date::MONTHNAMES[month.to_i]} #{year}"
     [max_humid, date]
   end
 
@@ -59,11 +59,6 @@ module Computate
     year, month = date.split '/'
     month = Date::ABBR_MONTHNAMES[month.to_i]
     file_name = "*_#{year}_#{month}.txt"
-  end
-
-  def get_date(data)
-    year, month, day = data[0].date.split('-')
-    "#{Date::MONTHNAMES[month.to_i]} #{year}"
   end
 
   def refine_temp_date(result)
