@@ -1,0 +1,3 @@
+# Weatherman
+
+Ruby Project
